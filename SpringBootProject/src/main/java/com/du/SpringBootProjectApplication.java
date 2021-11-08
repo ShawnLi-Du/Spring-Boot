@@ -1,14 +1,13 @@
-package com.du.SpringBoot;
+package com.du;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.context.annotation.ApplicationScope;
 
 @SpringBootApplication
-public class Application {
+public class SpringBootProjectApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+		SpringApplication.run(SpringBootProjectApplication.class, args);
 	}
 
 }
