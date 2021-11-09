@@ -11,22 +11,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class HomeController {
 	
-	private static Logger Log = LoggerFactory.getLogger(HomeController.class);
-	
-	@GetMapping("/")
-	public @ResponseBody String home() {
-		Log.info("test.......");
-		return "HelloWorld";
-		
-	}
-
-	@GetMapping("/hello")
-	public String hello(@RequestParam(value="name", required = false) String visitor, Model model) {
-		
-		String message = visitor != null ? visitor + " 您好 " : "訪客  您好";
-		 model.addAttribute("helloMessage", message);
-		return "greeting";
-		
-	}
+//	private static Logger Log = LoggerFactory.getLogger(HomeController.class);
+//	
+//	@GetMapping("/")
+//	public String home() {
+//		Log.info("test.......");
+//		return "indexTEST";
+//		
+//	}
+//
+//	@GetMapping("/hello")
+//	public String hello(@RequestParam(value="name", required = false) String visitor, Model model) {
+//		
+//		String message = visitor != null ? visitor + " 您好 " : "訪客  您好";
+//		 model.addAttribute("helloMessage", message);
+//		return "greeting";
+//		
+//	}
 	
 }
