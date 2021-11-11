@@ -93,23 +93,30 @@ public class RegisterServiseImpl implements RegisterServise {
 
 	// 找回密碼---------------------------------------------------------
 	@Override
-	public Integer search(String mail) {
+	public String search(String mail) {
 
-		String newPw = "";
+		System.out.println("email(mail) = " + email(mail));
+		if(email(mail).equals("1")){
+			String newPw = "";
 
-		for (int j = 0; j < 4; j++) {
-			Random random = new Random();
-			String pw = String.valueOf(random.nextInt(4) + 1);
-			newPw += pw;
+			for (int j = 0; j < 4; j++) {
+				Random random = new Random();
+				String pw = String.valueOf(random.nextInt(4) + 1);
+				newPw += pw;
+			}
+
+			String passwords = registerServiseImpl(newPw); // 轉md5
+			SendEmail send = new SendEmail();
+			send.SendMail(newPw);
+
+			registerDao.search(mail, passwords); // 修改 sql 密碼
+
+			return "更新成功";
+		}else {
+			return "更新失敗";
 		}
+		
 
-		String passwords = registerServiseImpl(newPw); // 轉md5
-		SendEmail send = new SendEmail();
-		send.SendMail(newPw);
-
-		Integer count = registerDao.search(mail, passwords); // 修改 sql 密碼
-
-		return count;
 
 	}
 

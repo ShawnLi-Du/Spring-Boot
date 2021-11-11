@@ -2,12 +2,14 @@ package com.du.reponsitory;
 
 import java.util.List;
 
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.du.model.RegisterBean;
 
+@SuppressWarnings({ "unchecked", "rawtypes" })
 @Repository
 public class RegisterDaoImpl implements RegisterDao {
 
@@ -17,7 +19,6 @@ public class RegisterDaoImpl implements RegisterDao {
 	RegisterBean registerBean;
 
 	// 查詢帳號
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<RegisterBean> email(String mail) {
 		String hql = "FROM RegisterBean WHERE EMAIL=:EMAIL";

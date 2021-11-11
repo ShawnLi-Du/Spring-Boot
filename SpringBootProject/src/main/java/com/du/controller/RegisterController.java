@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,99 +20,90 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.du.model.MemberAccount;
 import com.du.model.RegisterBean;
 import com.du.servise.RegisterServise;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @RestController
-//@Controller
 public class RegisterController {
-	
-	private static Logger Log = LoggerFactory.getLogger(HomeController.class);
-	
+
 	@Autowired
 	RegisterServise registerServlise;
 
-	// email 驗證---------------------------------------------------------
-	@PostMapping("/register")
-	public Object email(@RequestParam("email") String mail) {
-		return registerServlise.email(mail);
+	// email 驗證---------------------------------------------------
+	@PostMapping("/cheackEmail")
+	public Object cheackEmail(@RequestBody RegisterBean registerBean) {
+		Object numStr = registerServlise.email(registerBean.getEmail());
+		// 0=可新增, 1=重複
+		if (numStr == "0") {
+			return "帳號可以新增";
+		} else {
+			return "帳號重複";
+		}
 	}
 
-
 	// 註冊---------------------------------------------------------
-	@PostMapping("/registerS")
-	public String register(HttpServletRequest request) {
-
-		String mail = request.getParameter("mail");
-		String password = request.getParameter("password");
-		if (password.length() != 0) {
-		}
-
-		registerServlise.register(mail, password);
-		return "input";
+	@PostMapping("/createMember")
+	public String createMember(@RequestBody RegisterBean registerBean) {
+		registerServlise.register(registerBean.getEmail(), registerBean.getPassword());
+		return "註冊成功";
 	}
 
 	// 登入---------------------------------------------------------
 	@PostMapping("/input")
-	public String input(HttpServletRequest request, Model model) {
+	public String input(@RequestBody RegisterBean registerBean) {
 
-		String mail = request.getParameter("mail");
-		String password = request.getParameter("password");
-		
-		List<RegisterBean> list = registerServlise.input(mail, password);
-
+		List<RegisterBean> list = registerServlise.input(registerBean.getEmail(), registerBean.getPassword());
 		if (!list.get(0).getEmail().equals("error")) {
-			model.addAttribute("error", "");
-			request.setAttribute("lists", list);
-			return "viewDate";
+			return "登入成功";
 		} else {
-			model.addAttribute("error", "使用者名稱或者密碼錯誤");
-			return "input";
+			return "登入失敗";
 		}
+
+//		String mail = request.getParameter("mail");
+//		String password = request.getParameter("password");
+//		List<RegisterBean> list = registerServlise.input(mail, password);
+//		if (!list.get(0).getEmail().equals("error")) {
+//			model.addAttribute("error", "");
+//			request.setAttribute("lists", list);
+//			return "viewDate";
+//		} else {
+//			model.addAttribute("error", "使用者名稱或者密碼錯誤");
+//			return "input";
+//		}
 	}
 
 	// 找回密碼---------------------------------------------------------
-	@PostMapping("into")
-	public String search(HttpServletRequest request, Model model) {
+	@PostMapping("/updatePassword")
+	public String updatePassword(@RequestBody RegisterBean registerBean) {
+
+		String rs = registerServlise.search(registerBean.getEmail());
+		return rs;
+
 		
-		String email = request.getParameter("mail");
-		Integer count = registerServlise.search(email);
-		
-		if(count == 1) {  //更新成功
-			model.addAttribute("passworSsuccess", "更新成功");
-			return "input";
-		}else {
-			model.addAttribute("passworError", "更新失敗");
-			return "input";
-		}
 	}
 
-	
-	
-	
 	@GetMapping("/")
 	public String home() {
-		Log.info("返回註冊頁面...");
 		return "index";
 	}
-	
+
 	// 返回登入頁面---------------------------------------------------------
 	@PostMapping("login")
 	public String login() {
-		Log.info("返回登入頁面...");
 		return "input";
 	}
 
 	// 返回註冊頁面---------------------------------------------------------
 	@PostMapping("index")
 	public String head() {
-		Log.info("返回註冊頁面...");
 		return "index";
 	}
+
 	// 返回找回密碼頁面---------------------------------------------------------
 	@PostMapping("search")
 	public String search() {
-		Log.info("返回找回密碼頁面...");
 		return "search";
 	}
 }

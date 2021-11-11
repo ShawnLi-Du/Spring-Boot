@@ -13,7 +13,7 @@ public interface RegisterServise {
 
 	List<RegisterBean> input(String mail, String password);
 
-	Integer search(String email);
+	String search(String email);
 
 	String registerServiseImpl(String password);
 
